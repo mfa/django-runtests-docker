@@ -1,5 +1,5 @@
 #!/bin/sh
-git clone git@github.com:django/django.git
+git clone https://github.com/django/django.git
 docker build --tag=django-tests .
 
 docker run -d -p 5432:5432 --name django-test-db postgres:9.4
