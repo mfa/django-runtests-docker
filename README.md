@@ -14,6 +14,7 @@ sh run.sh
 
 ## digitalocean test box walkthrough
 
+- you need a 1GB RAM server!  (or a add swap file as alternative)
 - install debian 8.2 64bit
 - install https transport for apt: ``apt-get update && apt-get install apt-transport-https``
 - install Docker: https://docs.docker.com/engine/installation/debian/#debian-jessie-80-64-bit
