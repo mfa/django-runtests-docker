@@ -1,22 +1,32 @@
-FROM python:3.4
+FROM python:3.6-stretch
 
 USER root
+
+RUN mkdir -p /opt/code
+
+ENV PYTHONPATH /opt/code:$PYTHONPATH
+ENV DJANGO_SETTINGS_MODULE tests.test_postgres_docker
+
 RUN apt-get update && apt-get install -y \
-		postgresql-client libpq-dev \
-		sqlite3 \
-		gcc \
-	--no-install-recommends && rm -rf /var/lib/apt/lists/*
+	gcc \
+	libmemcached-dev \
+	libpq-dev \
+	postgresql-client \
+	sqlite3 \
+	--no-install-recommends \
+	&& rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip
 
-ADD django /opt/code
-WORKDIR /opt/code/tests
-ENV PYTHONPATH ..:$PYTHONPATH
+ADD https://raw.githubusercontent.com/django/django/master/tests/requirements/postgres.txt /opt/requirements-postgres.txt
+RUN pip install -Ur /opt/requirements-postgres.txt
 
-COPY test_postgres_docker.py /opt/code/tests/
-ENV DJANGO_SETTINGS_MODULE tests.test_postgres_docker
+ADD https://raw.githubusercontent.com/django/django/master/tests/requirements/py3.txt /opt/requirements-py3.txt
+RUN pip install -Ur /opt/requirements-py3.txt
 
-RUN pip install --trusted-host=pypi.qax.io --find-links=http://pypi.qax.io/wheels/ -r /opt/code/tests/requirements/py3.txt
-RUN pip install --trusted-host=pypi.qax.io --find-links=http://pypi.qax.io/wheels/ -r /opt/code/tests/requirements/postgres.txt
+WORKDIR /opt
 
-CMD python3 ./runtests.py
+COPY test_postgres_docker.py /opt
+COPY runtests.py /opt
+
+CMD /opt/runtests.py

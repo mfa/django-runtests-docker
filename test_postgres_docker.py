@@ -1,10 +1,3 @@
-# This is an example test settings file for use with the Django test suite.
-#
-# FIXME: write some text here
-#
-#
-#
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
